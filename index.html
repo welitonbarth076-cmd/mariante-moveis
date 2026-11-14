@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mariante Móveis | Do zero</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Mariante Móveis</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="#">Produtos</a>
+            <a href="#">Contato</a>
+        </nav>
+        <a href="carrinho.html" class="carrinho" style="text-decoration: none; color: white;">
+            🛒 <span id="contador-carrinho">0</span>
+        </a>
+    </header>
+
+    <main>
+        <h1>Nossos Móveis Pré-Moldados</h1>
+        <p class="aviso-entrega">⚠️ Entregamos apenas em pontos específicos. Consulte sua região!</p>
+
+        <div class="filtros">
+            <button class="btn-filtro ativo" onclick="filtrarProdutos('todos', this)">Todos</button>
+            <button class="btn-filtro" onclick="filtrarProdutos('quarto', this)">Quarto</button>
+            <button class="btn-filtro" onclick="filtrarProdutos('sala', this)">Sala</button>
+        </div>
+
+        <div class="grade-produtos" id="grade-produtos">
+            
+            <!-- Produto 1 (Estoque: 2) -->
+            <div class="card-produto" data-categoria="quarto" data-estoque="2">
+                <a href="produto.html">
+                    <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400" alt="Guarda-Roupa">
+                </a>
+                <span class="tag-estoque ativo">Últimas unidades!</span>
+                <h3><a href="produto.html" style="text-decoration: none; color: #333;">Guarda-Roupa 2 Portas</a></h3>
+                <p class="preco">R$ 899,00</p>
+                <button onclick="adicionarAoCarrinho(this, 'Guarda-Roupa 2 Portas - Padrão', 899.00)">Adicionar ao Carrinho</button>
+            </div>
+
+            <!-- Produto 2 (Estoque: 5) -->
+            <div class="card-produto" data-categoria="quarto" data-estoque="5">
+                <img src="https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?w=400" alt="Cômoda">
+                <h3>Cômoda 5 Gavetas</h3>
+                <p class="preco">R$ 649,00</p>
+                <button onclick="adicionarAoCarrinho(this, 'Cômoda 5 Gavetas - Padrão', 649.00)">Adicionar ao Carrinho</button>
+            </div>
+
+            <!-- Produto 3 (Estoque: 0 - Esgotado) -->
+            <div class="card-produto" data-categoria="sala" data-estoque="0">
+                <img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400" alt="Estante">
+                <span class="tag-estoque esgotado">Esgotado</span>
+                <h3>Estante Modular</h3>
+                <p class="preco">R$ 459,00</p>
+                <button onclick="adicionarAoCarrinho(this, 'Estante Modular - Padrão', 459.00)" disabled>Esgotado</button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mariante Móveis. Projeto de estudo.</p>
+    </footer>
+
+    <script>
+        let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
+        document.getElementById('contador-carrinho').innerText = carrinho.length;
+
+        // Função que simula o controle de estoque visual
+        function adicionarAoCarrinho(botao, nome, preco) {
+            const card = botao.closest('.card-produto');
+            let estoque = parseInt(card.getAttribute('data-estoque'));
+
+            // Verifica quantos itens iguais já estão no carrinho
+            let itensNoCarrinho = carrinho.filter(item => item.nome === nome).length;
+
+            if (itensNoCarrinho >= estoque) {
+                alert("Desculpe, você já adicionou todo o estoque disponível deste produto!");
+                return;
+            }
+
+            carrinho.push({ nome: nome, preco: preco });
+            localStorage.setItem('carrinhoMariante', JSON.stringify(carrinho));
+            
+            document.getElementById('contador-carrinho').innerText = carrinho.length;
+            
+            // Baixa o estoque
+            estoque--;
+            card.setAttribute('data-estoque', estoque);
+            
+            // Atualiza visual se esgotar
+            if (estoque === 0) {
+                botao.innerText = 'Esgotado';
+                botao.disabled = true;
+                botao.style.backgroundColor = '#ccc';
+                const tag = card.querySelector('.tag-estoque');
+                if(tag) { tag.innerText = 'Esgotado'; tag.classList.remove('ativo'); tag.classList.add('esgotado'); }
+            } 
+            // Atualiza visual de últimas unidades
+            else if (estoque <= 2) {
+                const tag = card.querySelector('.tag-estoque');
+                if(tag) { tag.innerText = 'Últimas unidades!'; tag.classList.add('ativo'); }
+            }
+
+            alert(`${nome} adicionado ao carrinho!`);
+        }
+
+        // Filtros da vitrine
+        function filtrarProdutos(categoria, botaoClicado) {
+            const produtos = document.querySelectorAll('.card-produto');
+            const botoes = document.querySelectorAll('.btn-filtro');
+
+            botoes.forEach(btn => btn.classList.remove('ativo'));
+            botaoClicado.classList.add('ativo');
+
+            produtos.forEach(produto => {
+                if (categoria === 'todos' || produto.dataset.categoria === categoria) {
+                    produto.style.display = 'block';
+                } else {
+                    produto.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

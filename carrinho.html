@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho | Mariante Móveis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Mariante Móveis</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="#">Produtos</a>
+            <a href="#">Contato</a>
+        </nav>
+        <div class="carrinho">
+            🛒 <span id="contador-carrinho">0</span>
+        </div>
+    </header>
+
+    <main>
+        <h1>Seu Carrinho</h1>
+        
+        <div id="lista-carrinho" class="lista-carrinho"></div>
+
+        <div class="resumo-carrinho">
+            <h2>Total: <span id="total-carrinho">R$ 0,00</span></h2>
+            <button class="btn-finalizar" onclick="finalizarPedido()">Finalizar no WhatsApp</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mariante Móveis. Projeto de estudo.</p>
+    </footer>
+
+    <script>
+        let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
+
+        function atualizarCarrinho() {
+            const lista = document.getElementById('lista-carrinho');
+            const totalSpan = document.getElementById('total-carrinho');
+            const contador = document.getElementById('contador-carrinho');
+            
+            lista.innerHTML = ''; 
+            let total = 0;
+            let totalItens = 0;
+
+            if (carrinho.length === 0) {
+                lista.innerHTML = '<p style="text-align:center; color: #666;">Seu carrinho está vazio. <br><br> <a href="index.html" style="color: #6B4226; font-weight: bold;">Voltar para a loja</a></p>';
+            }
+
+            // Agrupa os itens iguais
+            const itensAgrupados = {};
+            carrinho.forEach(produto => {
+                if (itensAgrupados[produto.nome]) {
+                    itensAgrupados[produto.nome].quantidade += 1;
+                } else {
+                    itensAgrupados[produto.nome] = { ...produto, quantidade: 1 };
+                }
+            });
+
+            // Renderiza na tela
+            for (const nome in itensAgrupados) {
+                const item = itensAgrupados[nome];
+                const subtotal = item.preco * item.quantidade;
+                
+                lista.innerHTML += `
+                    <div class="item-carrinho">
+                        <div>
+                            <h3>${item.quantidade}x ${item.nome}</h3>
+                            <p>R$ ${item.preco.toFixed(2).replace('.', ',')} (cada)</p>
+                            <p style="font-weight: bold; color: #7C8B5A;">Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}</p>
+                        </div>
+                        <button class="btn-remover" onclick="removerDoCarrinho('${nome}')">Remover</button>
+                    </div>
+                `;
+                total += subtotal;
+                totalItens += item.quantidade;
+            }
+
+            totalSpan.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            contador.innerText = totalItens;
+        }
+
+        function removerDoCarrinho(nomeProduto) {
+            carrinho = carrinho.filter(produto => produto.nome !== nomeProduto);
+            localStorage.setItem('carrinhoMariante', JSON.stringify(carrinho));
+            atualizarCarrinho();
+        }
+
+        function finalizarPedido() {
+            if (carrinho.length === 0) {
+                alert("Seu carrinho está vazio!");
+                return;
+            }
+
+            let mensagem = "Olá, Mariante Móveis! Gostaria de fazer um pedido:\n\n";
+            
+            const itensAgrupados = {};
+            let total = 0;
+
+            carrinho.forEach(produto => {
+                if (itensAgrupados[produto.nome]) {
+                    itensAgrupados[produto.nome].quantidade += 1;
+                } else {
+                    itensAgrupados[produto.nome] = { ...produto, quantidade: 1 };
+                }
+            });
+
+            for (const nome in itensAgrupados) {
+                const item = itensAgrupados[nome];
+                const subtotal = item.preco * item.quantidade;
+                mensagem += `- ${item.quantidade}x ${item.nome} (R$ ${subtotal.toFixed(2).replace('.', ',')})\n`;
+                total += subtotal;
+            }
+
+            mensagem += `\n*Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
+            mensagem += `\n\nMeu CEP/Região é: `;
+
+            // ⚠️ COLOQUE O SEU WHATSAPP AQUI
+            const meuWhatsApp = "5511981487936"; 
+            
+            const url = `https://wa.me/${meuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+        }
+
+        atualizarCarrinho();
+    </script>
+
+</body>
+</html>

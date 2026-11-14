@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guarda-Roupa 2 Portas | Mariante Móveis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo"><a href="index.html" style="color: white; text-decoration: none;">Mariante Móveis</a></div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="#">Produtos</a>
+            <a href="#">Contato</a>
+        </nav>
+        <a href="carrinho.html" class="carrinho" style="text-decoration: none; color: white;">
+            🛒 <span id="contador-carrinho">0</span>
+        </a>
+    </header>
+
+    <main class="pagina-produto">
+        <div class="fotos-produto">
+            <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600" alt="Guarda-Roupa" class="foto-principal">
+            <div class="miniaturas">
+                <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=100" alt="Foto 1">
+                <img src="https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?w=100" alt="Foto 2">
+                <img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=100" alt="Foto 3">
+            </div>
+        </div>
+
+        <div class="info-produto">
+            <h1>Guarda-Roupa 2 Portas</h1>
+            <p class="preco-grande">R$ 899,00</p>
+            
+            <p class="descricao">
+                Guarda-roupa pré-moldado com 2 portas de correr, 2 gavetas e cabideiro interno. Estrutura em MDP com acabamento resistente. <strong>Vai desmontado com manual de montagem.</strong> Ideal para quartos compactos.
+            </p>
+
+            <div class="detalhes-tecnicos">
+                <h3>Medidas e Envio:</h3>
+                <ul>
+                    <li><strong>Medidas montado:</strong> 180cm (A) × 90cm (L) × 50cm (P)</li>
+                    <li><strong>Medidas da embalagem:</strong> 190 × 55 × 12 cm</li>
+                    <li><strong>Peso:</strong> 42kg</li>
+                    <li><strong>Entrega:</strong> Apenas em pontos específicos.</li>
+                </ul>
+            </div>
+
+            <div class="opcoes-cores">
+                <h3>Cor: <span id="cor-selecionada" style="font-weight: normal; color: #666;">Branco</span></h3>
+                <div class="botoes-cor">
+                    <button class="cor ativo" style="background: #fff; border: 2px solid #333;" onclick="selecionarCor('Branco', this)"></button>
+                    <button class="cor" style="background: #333;" onclick="selecionarCor('Preto', this)"></button>
+                    <button class="cor" style="background: #a0522d;" onclick="selecionarCor('Amadeirado', this)"></button>
+                </div>
+            </div>
+
+            <button class="btn-comprar" onclick="comprarProduto(this)">
+                Adicionar ao Carrinho
+            </button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mariante Móveis. Projeto de estudo.</p>
+    </footer>
+
+    <script>
+        let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
+        document.getElementById('contador-carrinho').innerText = carrinho.length;
+
+        let corAtual = 'Branco';
+        let estoqueProduto = 2; // Simulando estoque de 2 unidades
+
+        function selecionarCor(cor, botaoClicado) {
+            corAtual = cor;
+            document.getElementById('cor-selecionada').innerText = cor;
+            
+            const botoes = document.querySelectorAll('.cor');
+            botoes.forEach(btn => btn.classList.remove('ativo'));
+            botaoClicado.classList.add('ativo');
+        }
+
+        function comprarProduto(botao) {
+            const nomeProduto = `Guarda-Roupa 2 Portas - ${corAtual}`;
+            
+            let itensNoCarrinho = carrinho.filter(item => item.nome === nomeProduto).length;
+
+            if (itensNoCarrinho >= estoqueProduto) {
+                alert("Estoque esgotado para esta cor!");
+                return;
+            }
+
+            carrinho.push({ nome: nomeProduto, preco: 899.00 });
+            localStorage.setItem('carrinhoMariante', JSON.stringify(carrinho));
+            document.getElementById('contador-carrinho').innerText = carrinho.length;
+            
+            estoqueProduto--;
+            if (estoqueProduto === 0) {
+                botao.innerText = 'Esgotado';
+                botao.disabled = true;
+                botao.style.backgroundColor = '#ccc';
+            } else {
+                alert(`${nomeProduto} adicionado ao carrinho!`);
+            }
+        }
+    </script>
+</body>
+</html>
