@@ -43,39 +43,8 @@
         </div>
 
         <div class="grade-produtos" id="grade-produtos">
-            
-            <!-- Produto 1 -->
-            <div class="card-produto" data-categoria="quarto" data-estoque="2">
-                <a href="produto.html?id=guarda-roupa">
-                    <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400" alt="Guarda-Roupa">
-                </a>
-                <span class="tag-estoque ativo">Últimas unidades!</span>
-                <h3><a href="produto.html?id=guarda-roupa">Guarda-Roupa 2 Portas</a></h3>
-                <p class="preco">R$ 899,00</p>
-                <button onclick="adicionarAoCarrinho(this, 'Guarda-Roupa 2 Portas - Padrão', 899.00)">Adicionar ao Carrinho</button>
-            </div>
-
-            <!-- Produto 2 -->
-            <div class="card-produto" data-categoria="quarto" data-estoque="5">
-                <a href="produto.html?id=comoda">
-                    <img src="https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?w=400" alt="Cômoda">
-                </a>
-                <h3><a href="produto.html?id=comoda">Cômoda 5 Gavetas</a></h3>
-                <p class="preco">R$ 649,00</p>
-                <button onclick="adicionarAoCarrinho(this, 'Cômoda 5 Gavetas - Padrão', 649.00)">Adicionar ao Carrinho</button>
-            </div>
-
-            <!-- Produto 3 -->
-            <div class="card-produto" data-categoria="sala" data-estoque="0">
-                <a href="produto.html?id=estante">
-                    <img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400" alt="Estante">
-                </a>
-                <span class="tag-estoque esgotado">Esgotado</span>
-                <h3><a href="produto.html?id=estante">Estante Modular</a></h3>
-                <p class="preco">R$ 459,00</p>
-                <button onclick="adicionarAoCarrinho(this, 'Estante Modular - Padrão', 459.00)" disabled>Esgotado</button>
-            </div>
-
+            <!-- Os produtos serão carregados pelo Firebase aqui -->
+            <p style="text-align:center; color: #aaa;">Carregando produtos...</p>
         </div>
     </main>
 
@@ -104,47 +73,125 @@
         <svg viewBox="0 0 32 32" width="35" height="35" fill="white"><path d="M16 2a13 13 0 0 0-11 20l-2 6 7-2A13 13 0 1 0 16 2zm0 23a11 11 0 0 1-6-2l-4 1 1-4a11 11 0 1 1 9 5zm6-8c0-1-1-1-2-1-1 0-2 1-3 0s-2-3-1-4 1-2 0-3-2-2-3-1-3 2-3 5 2 6 5 7 6 2 7 1 1-4 0-5z"/></svg>
     </a>
 
-    <script>
-        function toggleMenu() {
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTZgUek5_kRVLqpv7okPIls7BGtBvqsAE",
+            authDomain: "mariante-moveis---projetc.firebaseapp.com",
+            projectId: "mariante-moveis---projetc",
+            storageBucket: "mariante-moveis---projetc.firebasestorage.app",
+            messagingSenderId: "544768590037",
+            appId: "1:544768590037:web:5acb2f1e2373f42129625c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Lógica do Menu
+        window.toggleMenu = function() {
             document.getElementById('menu-nav').classList.toggle('mostrar-menu');
         }
 
+        // Lógica do Carrinho (LocalStorage)
         let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
         document.getElementById('contador-carrinho').innerText = carrinho.length;
 
-        function adicionarAoCarrinho(botao, nome, preco) {
+        // Carregar Produtos do Firebase
+        async function carregarProdutos() {
+            const grade = document.getElementById('grade-produtos');
+            grade.innerHTML = ''; // Limpa o "Carregando..."
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "produtos"));
+                querySnapshot.forEach((doc) => {
+                    const produto = doc.data();
+                    const id = doc.id;
+
+                    // Define a categoria (opcional, se não tiver no banco, cai no padrão)
+                    const categoria = id === 'estante' ? 'sala' : 'quarto';
+
+                    // Define as etiquetas baseadas no estoque real
+                    let tagHTML = '';
+                    let botaoHTML = '';
+
+                    if (produto.estoque === 0) {
+                        tagHTML = `<span class="tag-estoque esgotado">Esgotado</span>`;
+                        botaoHTML = `<button onclick="adicionarAoCarrinho(this, '${produto.nome}', ${produto.preco}, '${id}')" disabled>Esgotado</button>`;
+                    } else {
+                        if (produto.estoque <= 2) {
+                            tagHTML = `<span class="tag-estoque ativo">Últimas unidades!</span>`;
+                        }
+                        botaoHTML = `<button onclick="adicionarAoCarrinho(this, '${produto.nome}', ${produto.preco}, '${id}')">Adicionar ao Carrinho</button>`;
+                    }
+
+                    // Cria o HTML do card dinamicamente
+                    grade.innerHTML += `
+                        <div class="card-produto" data-categoria="${categoria}" data-estoque="${produto.estoque}" id="card-${id}">
+                            <a href="produto.html?id=${id}">
+                                <img src="${produto.imagem}" alt="${produto.nome}">
+                            </a>
+                            ${tagHTML}
+                            <h3><a href="produto.html?id=${id}">${produto.nome}</a></h3>
+                            <p class="preco">R$ ${produto.preco.toFixed(2).replace('.', ',')}</p>
+                            ${botaoHTML}
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Erro ao carregar produtos:", error);
+                grade.innerHTML = '<p style="color: red; text-align: center;">Erro ao carregar os produtos. Verifique o console.</p>';
+            }
+        }
+
+        // Adicionar ao carrinho e atualizar estoque no Firebase
+        window.adicionarAoCarrinho = async function(botao, nome, preco, idProduto) {
             const card = botao.closest('.card-produto');
-            let estoque = parseInt(card.getAttribute('data-estoque'));
+            let estoqueAtual = parseInt(card.getAttribute('data-estoque'));
+
             let itensNoCarrinho = carrinho.filter(item => item.nome === nome).length;
 
-            if (itensNoCarrinho >= estoque) {
+            if (itensNoCarrinho >= estoqueAtual) {
                 alert("Desculpe, você já adicionou todo o estoque disponível deste produto!");
                 return;
             }
 
+            // Adiciona ao carrinho local
             carrinho.push({ nome: nome, preco: preco });
             localStorage.setItem('carrinhoMariante', JSON.stringify(carrinho));
-            
             document.getElementById('contador-carrinho').innerText = carrinho.length;
+
+            // Atualiza o visual imediatamente
+            let novoEstoque = estoqueAtual - 1;
+            card.setAttribute('data-estoque', novoEstoque);
             
-            estoque--;
-            card.setAttribute('data-estoque', estoque);
-            
-            if (estoque === 0) {
+            if (novoEstoque === 0) {
                 botao.innerText = 'Esgotado';
                 botao.disabled = true;
                 const tag = card.querySelector('.tag-estoque');
                 if(tag) { tag.innerText = 'Esgotado'; tag.classList.remove('ativo'); tag.classList.add('esgotado'); }
-            } 
-            else if (estoque <= 2) {
+            } else if (novoEstoque <= 2) {
                 const tag = card.querySelector('.tag-estoque');
                 if(tag) { tag.innerText = 'Últimas unidades!'; tag.classList.add('ativo'); }
+            }
+
+            // Atualiza no Firebase
+            try {
+                const produtoRef = doc(db, "produtos", idProduto);
+                await updateDoc(produtoRef, { estoque: novoEstoque });
+                console.log(`Estoque de ${nome} atualizado no Firebase para ${novoEstoque}`);
+            } catch (error) {
+                console.error("Erro ao atualizar estoque no banco:", error);
             }
 
             alert(`${nome} adicionado ao carrinho!`);
         }
 
-        function filtrarProdutos(categoria, botaoClicado) {
+        // Filtros
+        window.filtrarProdutos = function(categoria, botaoClicado) {
             const produtos = document.querySelectorAll('.card-produto');
             const botoes = document.querySelectorAll('.btn-filtro');
 
@@ -159,6 +206,9 @@
                 }
             });
         }
+
+        // Inicia a leitura do banco
+        carregarProdutos();
     </script>
 </body>
 </html>

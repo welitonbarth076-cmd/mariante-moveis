@@ -28,37 +28,9 @@
         </a>
     </header>
 
-    <main class="pagina-produto">
-        <div class="fotos-produto">
-            <img src="" alt="Produto" class="foto-principal" id="img-principal">
-        </div>
-
-        <div class="info-produto">
-            <h1 id="nome-produto">Carregando...</h1>
-            <p class="preco-grande" id="preco-produto">R$ 0,00</p>
-            
-            <p class="descricao" id="desc-produto"></p>
-
-            <div class="detalhes-tecnicos">
-                <h3>Medidas e Envio:</h3>
-                <ul id="medidas-produto"></ul>
-            </div>
-
-            <div class="opcoes-cores">
-                <h3>Cor: <span id="cor-selecionada">Branco</span></h3>
-                <div class="botoes-cor" id="botoes-cor"></div>
-            </div>
-
-            <button class="btn-comprar" id="btn-comprar" onclick="comprarProduto()">
-                Adicionar ao Carrinho
-            </button>
-
-            <div class="selos-confianca">
-                <div class="selo">🔒 Compra 100% Segura</div>
-                <div class="selo">⭐ Produto com Garantia</div>
-                <div class="selo">🚚 Envio Rápido</div>
-            </div>
-        </div>
+    <main class="pagina-produto" id="main-produto">
+        <!-- O conteúdo será preenchido pelo JS -->
+        <p style="text-align:center; width: 100%; color: #aaa;">Carregando informações do produto...</p>
     </main>
 
     <footer>
@@ -86,113 +58,128 @@
         <svg viewBox="0 0 32 32" width="35" height="35" fill="white"><path d="M16 2a13 13 0 0 0-11 20l-2 6 7-2A13 13 0 1 0 16 2zm0 23a11 11 0 0 1-6-2l-4 1 1-4a11 11 0 1 1 9 5zm6-8c0-1-1-1-2-1-1 0-2 1-3 0s-2-3-1-4 1-2 0-3-2-2-3-1-3 2-3 5 2 6 5 7 6 2 7 1 1-4 0-5z"/></svg>
     </a>
 
-    <script>
-        function toggleMenu() {
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTZgUek5_kRVLqpv7okPIls7BGtBvqsAE",
+            authDomain: "mariante-moveis---projetc.firebaseapp.com",
+            projectId: "mariante-moveis---projetc",
+            storageBucket: "mariante-moveis---projetc.firebasestorage.app",
+            messagingSenderId: "544768590037",
+            appId: "1:544768590037:web:5acb2f1e2373f42129625c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.toggleMenu = function() {
             document.getElementById('menu-nav').classList.toggle('mostrar-menu');
         }
 
         let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
         document.getElementById('contador-carrinho').innerText = carrinho.length;
 
-        const produtos = {
-            "guarda-roupa": {
-                nome: "Guarda-Roupa 2 Portas",
-                preco: 899.00,
-                imagem: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600",
-                descricao: "Guarda-roupa pré-moldado com 2 portas de correr, 2 gavetas e cabideiro interno. Estrutura em MDP com acabamento resistente. Vai desmontado com manual de montagem.",
-                medidas: ["180cm (A) × 90cm (L) × 50cm (P)", "190 × 55 × 12 cm", "42kg"],
-                cores: [{ nome: "Branco", hex: "#fff" }, { nome: "Preto", hex: "#333" }, { nome: "Amadeirado", hex: "#a0522d" }],
-                estoque: 2
-            },
-            "comoda": {
-                nome: "Cômoda 5 Gavetas",
-                preco: 649.00,
-                imagem: "https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?w=600",
-                descricao: "Cômoda pré-moldada com 5 gavetas corrediças metálicas e puxadores em PVC. Acabamento fosco de alta resistência. Perfeita para organizar o quarto.",
-                medidas: ["95cm (A) × 80cm (L) × 45cm (P)", "100 × 50 × 15 cm", "28kg"],
-                cores: [{ nome: "Branco", hex: "#fff" }, { nome: "Cinza", hex: "#999" }],
-                estoque: 5
-            },
-            "estante": {
-                nome: "Estante Modular",
-                preco: 459.00,
-                imagem: "https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=600",
-                descricao: "Estante com 4 nichos, pode ser usada em pé ou deitada. Sistema modular: compre 2 e monte uma estante maior.",
-                medidas: ["120cm (A) × 80cm (L) × 30cm (P)", "130 × 45 × 10 cm", "18kg"],
-                cores: [{ nome: "Branco", hex: "#fff" }, { nome: "Amadeirado", hex: "#a0522d" }],
-                estoque: 0
-            }
-        };
-
         const urlParams = new URLSearchParams(window.location.search);
-        const produtoId = urlParams.get('id') || 'guarda-roupa'; 
-        const produto = produtos[produtoId];
+        const produtoId = urlParams.get('id');
 
-        let corAtual = produto ? produto.cores[0].nome : '';
+        let corAtual = 'Padrão'; // Como não estamos salvando cores no banco ainda, deixei como Padrão
 
-        function carregarProduto() {
-            if (!produto) {
-                document.querySelector('main').innerHTML = '<h1>Produto não encontrado!</h1>';
+        async function carregarProduto() {
+            const main = document.getElementById('main-produto');
+
+            if (!produtoId) {
+                main.innerHTML = '<h1>Produto não encontrado!</h1>';
                 return;
             }
 
-            document.title = `${produto.nome} | Mariante Móveis`;
+            try {
+                const docRef = doc(db, "produtos", produtoId);
+                const docSnap = await getDoc(docRef);
 
-            document.getElementById('img-principal').src = produto.imagem;
-            document.getElementById('nome-produto').innerText = produto.nome;
-            document.getElementById('preco-produto').innerText = `R$ ${produto.preco.toFixed(2).replace('.', ',')}`;
-            document.getElementById('desc-produto').innerText = produto.descricao;
+                if (docSnap.exists()) {
+                    const produto = docSnap.data();
+                    document.title = `${produto.nome} | Mariante Móveis`;
 
-            const listaMedidas = document.getElementById('medidas-produto');
-            listaMedidas.innerHTML = `
-                <li><strong>Medidas montado:</strong> ${produto.medidas[0]}</li>
-                <li><strong>Medidas da embalagem:</strong> ${produto.medidas[1]}</li>
-                <li><strong>Peso:</strong> ${produto.medidas[2]}</li>
-                <li><strong>Entrega:</strong> Apenas em pontos específicos.</li>
-            `;
+                    // Monta a tela do produto
+                    main.innerHTML = `
+                        <div class="fotos-produto">
+                            <img src="${produto.imagem}" alt="${produto.nome}" class="foto-principal">
+                        </div>
+                        <div class="info-produto">
+                            <h1>${produto.nome}</h1>
+                            <p class="preco-grande">R$ ${produto.preco.toFixed(2).replace('.', ',')}</p>
+                            
+                            <p class="descricao">
+                                Este móvel pré-moldado possui estrutura em MDP com acabamento resistente. <strong>Vai desmontado com manual de montagem.</strong> Ideal para o seu espaço.
+                            </p>
 
-            const containerCores = document.getElementById('botoes-cor');
-            produto.cores.forEach((cor, index) => {
-                const btn = document.createElement('button');
-                btn.className = index === 0 ? 'cor ativo' : 'cor';
-                btn.style.backgroundColor = cor.hex;
-                btn.onclick = () => selecionarCor(cor.nome, btn);
-                containerCores.appendChild(btn);
-            });
+                            <div class="detalhes-tecnicos">
+                                <h3>Medidas e Envio:</h3>
+                                <ul>
+                                    <li><strong>Estoque atual:</strong> ${produto.estoque} unidades</li>
+                                    <li><strong>Entrega:</strong> Apenas em pontos específicos.</li>
+                                </ul>
+                            </div>
 
-            const btnComprar = document.getElementById('btn-comprar');
-            if (produto.estoque === 0) {
-                btnComprar.innerText = 'Esgotado';
-                btnComprar.disabled = true;
-                btnComprar.style.backgroundColor = '#333';
-                btnComprar.style.color = '#666';
+                            <button class="btn-comprar" id="btn-comprar" onclick="comprarProduto('${produto.nome}', ${produto.preco}, ${produto.estoque}, '${produtoId}')" ${produto.estoque === 0 ? 'disabled' : ''}>
+                                ${produto.estoque === 0 ? 'Esgotado' : 'Adicionar ao Carrinho'}
+                            </button>
+
+                            <div class="selos-confianca">
+                                <div class="selo">🔒 Compra 100% Segura</div>
+                                <div class="selo">⭐ Produto com Garantia</div>
+                                <div class="selo">🚚 Envio Rápido</div>
+                            </div>
+                        </div>
+                    `;
+
+                    if (produto.estoque === 0) {
+                        const btn = document.getElementById('btn-comprar');
+                        btn.style.backgroundColor = '#333';
+                        btn.style.color = '#666';
+                    }
+                } else {
+                    main.innerHTML = '<h1>Produto não encontrado no banco de dados!</h1>';
+                }
+            } catch (error) {
+                console.error("Erro ao buscar produto:", error);
+                main.innerHTML = '<h1>Erro ao carregar o produto.</h1>';
             }
         }
 
-        function selecionarCor(cor, botaoClicado) {
-            corAtual = cor;
-            document.getElementById('cor-selecionada').innerText = cor;
-            
-            const botoes = document.querySelectorAll('.cor');
-            botoes.forEach(btn => btn.classList.remove('ativo'));
-            botaoClicado.classList.add('ativo');
-        }
+        window.comprarProduto = async function(nome, preco, estoqueAtual, idProduto) {
+            let itensNoCarrinho = carrinho.filter(item => item.nome === nome).length;
 
-        function comprarProduto() {
-            const nomeProduto = `${produto.nome} - ${corAtual}`;
-            
-            let itensNoCarrinho = carrinho.filter(item => item.nome === nomeProduto).length;
-
-            if (itensNoCarrinho >= produto.estoque) {
-                alert("Estoque esgotado para esta cor!");
+            if (itensNoCarrinho >= estoqueAtual) {
+                alert("Estoque esgotado!");
                 return;
             }
 
-            carrinho.push({ nome: nomeProduto, preco: produto.preco });
+            carrinho.push({ nome: nome, preco: preco });
             localStorage.setItem('carrinhoMariante', JSON.stringify(carrinho));
             document.getElementById('contador-carrinho').innerText = carrinho.length;
             
-            alert(`${nomeProduto} adicionado ao carrinho!`);
+            let novoEstoque = estoqueAtual - 1;
+            
+            // Atualiza no Firebase
+            try {
+                const produtoRef = doc(db, "produtos", idProduto);
+                await updateDoc(produtoRef, { estoque: novoEstoque });
+                
+                if (novoEstoque === 0) {
+                    const btn = document.getElementById('btn-comprar');
+                    btn.innerText = 'Esgotado';
+                    btn.disabled = true;
+                    btn.style.backgroundColor = '#333';
+                }
+            } catch (error) {
+                console.error("Erro ao atualizar estoque:", error);
+            }
+
+            alert(`${nome} adicionado ao carrinho!`);
         }
 
         carregarProduto();
