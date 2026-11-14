@@ -14,11 +14,15 @@
                 <img src="logo.png" alt="Mariante Móveis">
             </a>
         </div>
-        <nav>
+        
+        <button class="menu-hamburguer" onclick="toggleMenu()">☰</button>
+
+        <nav id="menu-nav">
             <a href="index.html">Início</a>
             <a href="#">Produtos</a>
             <a href="#">Contato</a>
         </nav>
+        
         <a href="carrinho.html" class="carrinho" style="text-decoration: none;">
             🛒 <span id="contador-carrinho">0</span>
         </a>
@@ -72,6 +76,12 @@
     </footer>
 
     <script>
+        // Menu Hambúrguer
+        function toggleMenu() {
+            document.getElementById('menu-nav').classList.toggle('mostrar-menu');
+        }
+
+        // Lógica do Produto
         let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
         document.getElementById('contador-carrinho').innerText = carrinho.length;
 

@@ -39,7 +39,7 @@ header {
 }
 
 .logo img {
-    height: 70px; /* Ajuste o tamanho do logo aqui */
+    height: 70px;
     border-radius: 50%;
 }
 
@@ -71,6 +71,15 @@ nav a:hover {
 
 .carrinho:hover {
     transform: scale(1.05);
+}
+
+.menu-hamburguer {
+    display: none; /* Escondido no desktop */
+    background: transparent;
+    border: none;
+    color: #FFC107;
+    font-size: 32px;
+    cursor: pointer;
 }
 
 /* =========================================
@@ -452,7 +461,7 @@ button:disabled {
 }
 
 .btn-finalizar {
-    background: #25D366; /* Mantido o verde do WhatsApp */
+    background: #25D366;
     color: white;
     border: none;
     padding: 15px 35px;
@@ -483,45 +492,108 @@ footer {
 }
 
 /* =========================================
-   RESPONSIVIDADE (CELULAR)
+   RESPONSIVIDADE (CELULAR E TABLET)
    ========================================= */
 @media (max-width: 768px) {
     header {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
+        flex-wrap: wrap;
+        padding: 10px 5%;
     }
 
     .logo img {
-        height: 60px;
+        height: 50px;
+    }
+
+    .menu-hamburguer {
+        display: block; 
+        order: 2;
+    }
+
+    .carrinho {
+        order: 3;
+        padding: 8px 15px;
+        font-size: 14px;
     }
 
     nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #111;
+        text-align: center;
+        order: 4;
+        border-top: 1px solid #333;
+        margin-top: 10px;
+    }
+
+    nav.mostrar-menu {
         display: flex;
-        gap: 15px;
     }
 
     nav a {
-        margin: 0;
-        font-size: 12px;
+        margin: 15px 0;
+        font-size: 16px;
     }
 
     h1 {
-        font-size: 28px;
+        font-size: 26px;
+        margin-top: 20px;
+    }
+
+    .aviso-entrega {
+        font-size: 12px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .filtros {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn-filtro {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+
+    .grade-produtos {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .pagina-produto {
         flex-direction: column;
-        padding: 20px;
+        padding: 15px;
+        gap: 20px;
     }
     
     .foto-principal {
-        height: 300px;
+        height: 250px;
+    }
+
+    .info-produto h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .preco-grande {
+        font-size: 28px;
+        text-align: center;
+    }
+
+    .item-carrinho {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .btn-remover {
+        width: 100%;
     }
 
     .resumo-carrinho {
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
         text-align: center;
     }
 
