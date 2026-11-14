@@ -574,7 +574,7 @@ footer {
 /* 1. Sobe o botão do WhatsApp para não sobrepor a marca d'água */
 .btn-whatsapp-flutuante {
     position: fixed;
-    bottom: 80px !important; /* Aumenta a distância do fundo */
+    bottom: 80px !important;
     right: 20px !important;
     background-color: #25D366;
     width: 60px;
