@@ -29,8 +29,7 @@
     </header>
 
     <main class="pagina-produto" id="main-produto">
-        <!-- O conteúdo será preenchido pelo JS -->
-        <p style="text-align:center; width: 100%; color: #aaa;">Carregando informações do produto...</p>
+        <p style="text-align:center; width: 100%; color: #aaa; padding: 50px;">Carregando informações do produto...</p>
     </main>
 
     <footer>
@@ -58,7 +57,6 @@
         <svg viewBox="0 0 32 32" width="35" height="35" fill="white"><path d="M16 2a13 13 0 0 0-11 20l-2 6 7-2A13 13 0 1 0 16 2zm0 23a11 11 0 0 1-6-2l-4 1 1-4a11 11 0 1 1 9 5zm6-8c0-1-1-1-2-1-1 0-2 1-3 0s-2-3-1-4 1-2 0-3-2-2-3-1-3 2-3 5 2 6 5 7 6 2 7 1 1-4 0-5z"/></svg>
     </a>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -85,13 +83,11 @@
         const urlParams = new URLSearchParams(window.location.search);
         const produtoId = urlParams.get('id');
 
-        let corAtual = 'Padrão'; // Como não estamos salvando cores no banco ainda, deixei como Padrão
-
         async function carregarProduto() {
             const main = document.getElementById('main-produto');
 
             if (!produtoId) {
-                main.innerHTML = '<h1>Produto não encontrado!</h1>';
+                main.innerHTML = '<h1 style="width: 100%; text-align: center;">Produto não encontrado!</h1>';
                 return;
             }
 
@@ -103,10 +99,9 @@
                     const produto = docSnap.data();
                     document.title = `${produto.nome} | Mariante Móveis`;
 
-                    // Monta a tela do produto
                     main.innerHTML = `
                         <div class="fotos-produto">
-                            <img src="${produto.imagem}" alt="${produto.nome}" class="foto-principal">
+                            <img src="${produto.imagem}" alt="${produto.nome}" class="foto-principal" onerror="this.src='https://via.placeholder.com/600x450?text=Sem+Foto'">
                         </div>
                         <div class="info-produto">
                             <h1>${produto.nome}</h1>
@@ -142,11 +137,11 @@
                         btn.style.color = '#666';
                     }
                 } else {
-                    main.innerHTML = '<h1>Produto não encontrado no banco de dados!</h1>';
+                    main.innerHTML = '<h1 style="width: 100%; text-align: center;">Produto não encontrado no banco de dados!</h1>';
                 }
             } catch (error) {
                 console.error("Erro ao buscar produto:", error);
-                main.innerHTML = '<h1>Erro ao carregar o produto.</h1>';
+                main.innerHTML = '<h1 style="width: 100%; text-align: center;">Erro ao carregar o produto.</h1>';
             }
         }
 
@@ -164,7 +159,6 @@
             
             let novoEstoque = estoqueAtual - 1;
             
-            // Atualiza no Firebase
             try {
                 const produtoRef = doc(db, "produtos", idProduto);
                 await updateDoc(produtoRef, { estoque: novoEstoque });

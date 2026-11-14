@@ -43,8 +43,7 @@
         </div>
 
         <div class="grade-produtos" id="grade-produtos">
-            <!-- Os produtos serão carregados pelo Firebase aqui -->
-            <p style="text-align:center; color: #aaa;">Carregando produtos...</p>
+            <p style="text-align:center; color: #aaa; width: 100%;">Carregando produtos...</p>
         </div>
     </main>
 
@@ -73,12 +72,10 @@
         <svg viewBox="0 0 32 32" width="35" height="35" fill="white"><path d="M16 2a13 13 0 0 0-11 20l-2 6 7-2A13 13 0 1 0 16 2zm0 23a11 11 0 0 1-6-2l-4 1 1-4a11 11 0 1 1 9 5zm6-8c0-1-1-1-2-1-1 0-2 1-3 0s-2-3-1-4 1-2 0-3-2-2-3-1-3 2-3 5 2 6 5 7 6 2 7 1 1-4 0-5z"/></svg>
     </a>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDTZgUek5_kRVLqpv7okPIls7BGtBvqsAE",
             authDomain: "mariante-moveis---projetc.firebaseapp.com",
@@ -91,36 +88,36 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Lógica do Menu
         window.toggleMenu = function() {
             document.getElementById('menu-nav').classList.toggle('mostrar-menu');
         }
 
-        // Lógica do Carrinho (LocalStorage)
         let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
         document.getElementById('contador-carrinho').innerText = carrinho.length;
 
-        // Carregar Produtos do Firebase
         async function carregarProdutos() {
             const grade = document.getElementById('grade-produtos');
-            grade.innerHTML = ''; // Limpa o "Carregando..."
+            grade.innerHTML = ''; 
 
             try {
                 const querySnapshot = await getDocs(collection(db, "produtos"));
+                
+                if(querySnapshot.empty) {
+                    grade.innerHTML = '<p style="text-align:center; color: #aaa; width: 100%;">Nenhum produto cadastrado no banco.</p>';
+                    return;
+                }
+
                 querySnapshot.forEach((doc) => {
                     const produto = doc.data();
                     const id = doc.id;
-
-                    // Define a categoria (opcional, se não tiver no banco, cai no padrão)
                     const categoria = id === 'estante' ? 'sala' : 'quarto';
 
-                    // Define as etiquetas baseadas no estoque real
                     let tagHTML = '';
                     let botaoHTML = '';
 
                     if (produto.estoque === 0) {
                         tagHTML = `<span class="tag-estoque esgotado">Esgotado</span>`;
-                        botaoHTML = `<button onclick="adicionarAoCarrinho(this, '${produto.nome}', ${produto.preco}, '${id}')" disabled>Esgotado</button>`;
+                        botaoHTML = `<button disabled>Esgotado</button>`;
                     } else {
                         if (produto.estoque <= 2) {
                             tagHTML = `<span class="tag-estoque ativo">Últimas unidades!</span>`;
@@ -128,11 +125,11 @@
                         botaoHTML = `<button onclick="adicionarAoCarrinho(this, '${produto.nome}', ${produto.preco}, '${id}')">Adicionar ao Carrinho</button>`;
                     }
 
-                    // Cria o HTML do card dinamicamente
+                    // Adicionado onerror na imagem para fallback
                     grade.innerHTML += `
                         <div class="card-produto" data-categoria="${categoria}" data-estoque="${produto.estoque}" id="card-${id}">
                             <a href="produto.html?id=${id}">
-                                <img src="${produto.imagem}" alt="${produto.nome}">
+                                <img src="${produto.imagem}" alt="${produto.nome}" onerror="this.src='https://via.placeholder.com/400x250?text=Sem+Foto'">
                             </a>
                             ${tagHTML}
                             <h3><a href="produto.html?id=${id}">${produto.nome}</a></h3>
@@ -143,11 +140,10 @@
                 });
             } catch (error) {
                 console.error("Erro ao carregar produtos:", error);
-                grade.innerHTML = '<p style="color: red; text-align: center;">Erro ao carregar os produtos. Verifique o console.</p>';
+                grade.innerHTML = '<p style="color: red; text-align: center; width: 100%;">Erro ao carregar os produtos. Verifique o console.</p>';
             }
         }
 
-        // Adicionar ao carrinho e atualizar estoque no Firebase
         window.adicionarAoCarrinho = async function(botao, nome, preco, idProduto) {
             const card = botao.closest('.card-produto');
             let estoqueAtual = parseInt(card.getAttribute('data-estoque'));
@@ -159,12 +155,10 @@
                 return;
             }
 
-            // Adiciona ao carrinho local
             carrinho.push({ nome: nome, preco: preco });
             localStorage.setItem('carrinhoMariante', JSON.stringify(carrinho));
             document.getElementById('contador-carrinho').innerText = carrinho.length;
 
-            // Atualiza o visual imediatamente
             let novoEstoque = estoqueAtual - 1;
             card.setAttribute('data-estoque', novoEstoque);
             
@@ -178,7 +172,6 @@
                 if(tag) { tag.innerText = 'Últimas unidades!'; tag.classList.add('ativo'); }
             }
 
-            // Atualiza no Firebase
             try {
                 const produtoRef = doc(db, "produtos", idProduto);
                 await updateDoc(produtoRef, { estoque: novoEstoque });
@@ -190,7 +183,6 @@
             alert(`${nome} adicionado ao carrinho!`);
         }
 
-        // Filtros
         window.filtrarProdutos = function(categoria, botaoClicado) {
             const produtos = document.querySelectorAll('.card-produto');
             const botoes = document.querySelectorAll('.btn-filtro');
@@ -207,7 +199,6 @@
             });
         }
 
-        // Inicia a leitura do banco
         carregarProdutos();
     </script>
 </body>
