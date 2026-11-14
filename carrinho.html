@@ -9,7 +9,11 @@
 <body>
 
     <header>
-        <div class="logo">Mariante Móveis</div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="logo.png" alt="Mariante Móveis">
+            </a>
+        </div>
         <nav>
             <a href="index.html">Início</a>
             <a href="#">Produtos</a>
@@ -32,7 +36,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Mariante Móveis. Projeto de estudo.</p>
+        <p>&copy; 2026 Mariante Móveis. Seu lar mais completo começa aqui.</p>
     </footer>
 
     <script>
@@ -48,10 +52,9 @@
             let totalItens = 0;
 
             if (carrinho.length === 0) {
-                lista.innerHTML = '<p style="text-align:center; color: #666;">Seu carrinho está vazio. <br><br> <a href="index.html" style="color: #6B4226; font-weight: bold;">Voltar para a loja</a></p>';
+                lista.innerHTML = '<p style="text-align:center; color: #aaa;">Seu carrinho está vazio. <br><br> <a href="index.html" style="color: #FFC107; font-weight: bold;">Voltar para a loja</a></p>';
             }
 
-            // Agrupa os itens iguais
             const itensAgrupados = {};
             carrinho.forEach(produto => {
                 if (itensAgrupados[produto.nome]) {
@@ -61,7 +64,6 @@
                 }
             });
 
-            // Renderiza na tela
             for (const nome in itensAgrupados) {
                 const item = itensAgrupados[nome];
                 const subtotal = item.preco * item.quantidade;
@@ -70,8 +72,8 @@
                     <div class="item-carrinho">
                         <div>
                             <h3>${item.quantidade}x ${item.nome}</h3>
-                            <p>R$ ${item.preco.toFixed(2).replace('.', ',')} (cada)</p>
-                            <p style="font-weight: bold; color: #7C8B5A;">Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}</p>
+                            <p style="color: #aaa;">R$ ${item.preco.toFixed(2).replace('.', ',')} (cada)</p>
+                            <p style="font-weight: bold; color: #FFC107;">Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}</p>
                         </div>
                         <button class="btn-remover" onclick="removerDoCarrinho('${nome}')">Remover</button>
                     </div>
@@ -119,7 +121,7 @@
             mensagem += `\n*Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
             mensagem += `\n\nMeu CEP/Região é: `;
 
-            // ⚠️ COLOQUE O SEU WHATSAPP AQUI
+            // ⚠️ NÚMERO DO WHATSAPP AQUI
             const meuWhatsApp = "5511981487936"; 
             
             const url = `https://wa.me/${meuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
