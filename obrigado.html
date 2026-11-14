@@ -14,27 +14,30 @@
                 <img src="logo.png" alt="Mariante Móveis">
             </a>
         </div>
+        
+        <button class="menu-hamburguer" onclick="toggleMenu()">☰</button>
+
         <nav id="menu-nav">
             <a href="index.html">Início</a>
         </nav>
+        
         <a href="carrinho.html" class="carrinho" style="text-decoration: none;">
             🛒 <span id="contador-carrinho">0</span>
         </a>
     </header>
 
     <main>
-        <div class="hero" style="padding: 80px 20px;">
-            <h1 style="font-size: 50px; color: #25D366;">✅ Pedido Enviado!</h1>
-            <p style="font-size: 18px; margin-bottom: 30px;">
+        <div class="hero" style="padding: 80px 20px; text-align: center;">
+            <h1 style="font-size: 50px; color: #25D366; margin-bottom: 20px;">✅ Pedido Enviado!</h1>
+            <p style="font-size: 18px; margin-bottom: 40px; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
                 Obrigado por comprar na Mariante Móveis!<br>
-                Sua mensagem foi aberta no WhatsApp. Se você não enviou a mensagem, clique no botão abaixo.
+                Sua mensagem foi aberta no WhatsApp. Se você não enviou a mensagem, clique no botão verde abaixo para tentar novamente.
             </p>
             
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                 <a href="index.html" class="btn-finalizar" style="text-decoration: none; background-color: #FFC107; color: #000;">
                     Voltar para a Loja
                 </a>
-                <!-- O link do WhatsApp abaixo precisa ser o mesmo do seu carrinho -->
                 <a href="https://wa.me/5551981487936" target="_blank" class="btn-finalizar" style="text-decoration: none;">
                     Abrir WhatsApp Novamente
                 </a>
@@ -49,7 +52,6 @@
     </footer>
 
     <script>
-        // Limpa o carrinho assim que a página de sucesso carrega
         localStorage.removeItem('carrinhoMariante');
     </script>
 </body>

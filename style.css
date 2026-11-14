@@ -570,8 +570,6 @@ footer {
 /* =========================================
    AJUSTES FINAIS: BOTÃO WHATSAPP E NETLIFY
    ========================================= */
-
-/* 1. Sobe o botão do WhatsApp para não sobrepor a marca d'água */
 .btn-whatsapp-flutuante {
     position: fixed;
     bottom: 80px !important;
@@ -591,11 +589,52 @@ footer {
     transform: scale(1.1);
 }
 
-/* 2. Esconde a marca d'água "Powered by Netlify" */
 .netlify-badge, 
 #netlify-badge,
 [data-netlify-badge] {
     display: none !important;
+}
+
+/* =========================================
+   CONTROLES DE QUANTIDADE NO CARRINHO
+   ========================================= */
+.info-item-carrinho {
+    flex: 1;
+}
+
+.controles-quantidade {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-qtd {
+    background-color: #222;
+    color: #FFC107;
+    border: 1px solid #444;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-qtd:hover {
+    background-color: #FFC107;
+    color: #000;
+}
+
+.qtd-numero {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    min-width: 20px;
+    text-align: center;
 }
 
 /* =========================================
@@ -697,8 +736,13 @@ footer {
         gap: 15px;
     }
     
-    .btn-remover {
+    .controles-quantidade {
         width: 100%;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    .btn-remover {
+        margin-left: auto;
     }
 
     .resumo-carrinho {
@@ -714,7 +758,6 @@ footer {
     .footer-conteudo { flex-direction: column; text-align: center; }
     .selos-confianca { flex-direction: column; }
 
-    /* Ajuste do WhatsApp no celular */
     .btn-whatsapp-flutuante {
         bottom: 90px !important; 
         width: 65px !important;

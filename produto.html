@@ -94,10 +94,6 @@
         let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
         document.getElementById('contador-carrinho').innerText = carrinho.length;
 
-        // ==========================================
-        // BANCO DE DADOS DE PRODUTOS
-        // Para adicionar um novo produto no futuro, basta copiar um bloco e mudar as informações.
-        // ==========================================
         const produtos = {
             "guarda-roupa": {
                 nome: "Guarda-Roupa 2 Portas",
@@ -128,11 +124,8 @@
             }
         };
 
-        // ==========================================
-        // LÓGICA DE MONTAGEM DA PÁGINA
-        // ==========================================
         const urlParams = new URLSearchParams(window.location.search);
-        const produtoId = urlParams.get('id') || 'guarda-roupa'; // Se não tiver ID, carrega o guarda-roupa padrão
+        const produtoId = urlParams.get('id') || 'guarda-roupa'; 
         const produto = produtos[produtoId];
 
         let corAtual = produto ? produto.cores[0].nome : '';

@@ -99,12 +99,18 @@
                 
                 lista.innerHTML += `
                     <div class="item-carrinho">
-                        <div>
-                            <h3>${item.quantidade}x ${item.nome}</h3>
+                        <div class="info-item-carrinho">
+                            <h3>${item.nome}</h3>
                             <p style="color: #aaa;">R$ ${item.preco.toFixed(2).replace('.', ',')} (cada)</p>
                             <p style="font-weight: bold; color: #FFC107;">Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}</p>
                         </div>
-                        <button class="btn-remover" onclick="removerDoCarrinho('${nome}')">Remover</button>
+                        
+                        <div class="controles-quantidade">
+                            <button class="btn-qtd" onclick="alterarQuantidade('${nome}', -1)">-</button>
+                            <span class="qtd-numero">${item.quantidade}</span>
+                            <button class="btn-qtd" onclick="alterarQuantidade('${nome}', 1)">+</button>
+                            <button class="btn-remover" onclick="removerDoCarrinho('${nome}')">Remover</button>
+                        </div>
                     </div>
                 `;
                 total += subtotal;
@@ -113,6 +119,25 @@
 
             totalSpan.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
             contador.innerText = totalItens;
+        }
+
+        function alterarQuantidade(nomeProduto, mudanca) {
+            const itensFiltrados = carrinho.filter(item => item.nome === nomeProduto);
+            
+            if (mudanca === 1) {
+                carrinho.push({ nome: itensFiltrados[0].nome, preco: itensFiltrados[0].preco });
+            } else if (mudanca === -1) {
+                if (itensFiltrados.length > 1) {
+                    const index = carrinho.findIndex(item => item.nome === nomeProduto);
+                    carrinho.splice(index, 1);
+                } else {
+                    removerDoCarrinho(nomeProduto);
+                    return;
+                }
+            }
+            
+            localStorage.setItem('carrinhoMariante', JSON.stringify(carrinho));
+            atualizarCarrinho();
         }
 
         function removerDoCarrinho(nomeProduto) {
@@ -153,10 +178,8 @@
             const meuWhatsApp = "5551981487936"; 
             const url = `https://wa.me/${meuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
             
-            // Abre o WhatsApp em uma nova aba
             window.open(url, '_blank');
             
-            // Redireciona a página atual para a tela de obrigado após 1 segundo
             setTimeout(() => {
                 window.location.href = 'obrigado.html';
             }, 1000);
