@@ -527,7 +527,7 @@ footer {
 }
 
 /* =========================================
-   NOVAS MELHORIAS: HERO, SELOS E WHATSAPP
+   HERO E SELOS DE CONFIANÇA
    ========================================= */
 .hero {
     text-align: center;
@@ -545,25 +545,6 @@ footer {
     color: #aaa;
     font-size: 16px;
     margin-bottom: 20px;
-}
-
-.btn-whatsapp-flutuante {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #25D366;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    z-index: 1000;
-    transition: transform 0.3s;
-}
-.btn-whatsapp-flutuante:hover {
-    transform: scale(1.1);
 }
 
 .selos-confianca {
@@ -584,6 +565,37 @@ footer {
     flex: 1;
     min-width: 100px;
     color: #ddd;
+}
+
+/* =========================================
+   AJUSTES FINAIS: BOTÃO WHATSAPP E NETLIFY
+   ========================================= */
+
+/* 1. Sobe o botão do WhatsApp para não sobrepor a marca d'água */
+.btn-whatsapp-flutuante {
+    position: fixed;
+    bottom: 80px !important; /* Aumenta a distância do fundo */
+    right: 20px !important;
+    background-color: #25D366;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: transform 0.3s;
+}
+.btn-whatsapp-flutuante:hover {
+    transform: scale(1.1);
+}
+
+/* 2. Esconde a marca d'água "Powered by Netlify" */
+.netlify-badge, 
+#netlify-badge,
+[data-netlify-badge] {
+    display: none !important;
 }
 
 /* =========================================
@@ -701,4 +713,11 @@ footer {
 
     .footer-conteudo { flex-direction: column; text-align: center; }
     .selos-confianca { flex-direction: column; }
+
+    /* Ajuste do WhatsApp no celular */
+    .btn-whatsapp-flutuante {
+        bottom: 90px !important; 
+        width: 65px !important;
+        height: 65px !important;
+    }
 }
