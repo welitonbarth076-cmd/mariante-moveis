@@ -107,6 +107,9 @@
                     return;
                 }
 
+                // Carimbo de tempo para forçar a atualização das fotos
+                const timestamp = new Date().getTime();
+
                 querySnapshot.forEach((doc) => {
                     const produto = doc.data();
                     const id = doc.id;
@@ -125,11 +128,11 @@
                         botaoHTML = `<button onclick="adicionarAoCarrinho(this, '${produto.nome}', ${produto.preco}, '${id}')">Adicionar ao Carrinho</button>`;
                     }
 
-                    // Se a imagem falhar, ele tenta carregar a imagem genérica de "Sem Foto"
+                    // O link da imagem agora tem o "?v=" com o carimbo de tempo
                     grade.innerHTML += `
                         <div class="card-produto" data-categoria="${categoria}" data-estoque="${produto.estoque}" id="card-${id}">
                             <a href="produto.html?id=${id}">
-                                <img src="${produto.imagem}" alt="${produto.nome}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80';">
+                                <img src="${produto.imagem}?v=${timestamp}" alt="${produto.nome}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80';">
                             </a>
                             ${tagHTML}
                             <h3><a href="produto.html?id=${id}">${produto.nome}</a></h3>
