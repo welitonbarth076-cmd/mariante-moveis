@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Enviado | Mariante Móveis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="logo.png" alt="Mariante Móveis">
+            </a>
+        </div>
+        <nav id="menu-nav">
+            <a href="index.html">Início</a>
+        </nav>
+        <a href="carrinho.html" class="carrinho" style="text-decoration: none;">
+            🛒 <span id="contador-carrinho">0</span>
+        </a>
+    </header>
+
+    <main>
+        <div class="hero" style="padding: 80px 20px;">
+            <h1 style="font-size: 50px; color: #25D366;">✅ Pedido Enviado!</h1>
+            <p style="font-size: 18px; margin-bottom: 30px;">
+                Obrigado por comprar na Mariante Móveis!<br>
+                Sua mensagem foi aberta no WhatsApp. Se você não enviou a mensagem, clique no botão abaixo.
+            </p>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="index.html" class="btn-finalizar" style="text-decoration: none; background-color: #FFC107; color: #000;">
+                    Voltar para a Loja
+                </a>
+                <!-- O link do WhatsApp abaixo precisa ser o mesmo do seu carrinho -->
+                <a href="https://wa.me/5551981487936" target="_blank" class="btn-finalizar" style="text-decoration: none;">
+                    Abrir WhatsApp Novamente
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-copy" style="border: none; padding: 0;">
+            <p>&copy; 2026 Mariante Móveis. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Limpa o carrinho assim que a página de sucesso carrega
+        localStorage.removeItem('carrinhoMariante');
+    </script>
+</body>
+</html>

@@ -151,9 +151,15 @@
             mensagem += `\n\nMeu CEP/Região é: `;
 
             const meuWhatsApp = "5551981487936"; 
-            
             const url = `https://wa.me/${meuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+            
+            // Abre o WhatsApp em uma nova aba
             window.open(url, '_blank');
+            
+            // Redireciona a página atual para a tela de obrigado após 1 segundo
+            setTimeout(() => {
+                window.location.href = 'obrigado.html';
+            }, 1000);
         }
 
         atualizarCarrinho();
