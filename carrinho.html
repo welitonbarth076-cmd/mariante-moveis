@@ -39,17 +39,38 @@
         </div>
     </main>
 
+    <!-- RODAPÉ PROFISSIONAL -->
     <footer>
-        <p>&copy; 2026 Mariante Móveis. Seu lar mais completo começa aqui.</p>
+        <div class="footer-conteudo">
+            <div class="footer-col">
+                <h4>Mariante Móveis</h4>
+                <p>Seu lar mais completo começa aqui. Móveis pré-moldados de qualidade.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Atendimento</h4>
+                <p>WhatsApp: (11) 98148-7936</p>
+                <p>Seg a Sex, das 9h às 18h</p>
+            </div>
+            <div class="footer-col">
+                <h4>Redes Sociais</h4>
+                <a href="https://www.instagram.com/mariantemoveis/" target="_blank">📷 @mariantemoveis</a>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <p>&copy; 2026 Mariante Móveis. Todos os direitos reservados.</p>
+        </div>
     </footer>
 
+    <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
+    <a href="https://wa.me/5511981487936?text=Ol%C3%A1!%20Gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20os%20m%C3%B3veis." class="btn-whatsapp-flutuante" target="_blank">
+        <svg viewBox="0 0 32 32" width="35" height="35" fill="white"><path d="M16 2a13 13 0 0 0-11 20l-2 6 7-2A13 13 0 1 0 16 2zm0 23a11 11 0 0 1-6-2l-4 1 1-4a11 11 0 1 1 9 5zm6-8c0-1-1-1-2-1-1 0-2 1-3 0s-2-3-1-4 1-2 0-3-2-2-3-1-3 2-3 5 2 6 5 7 6 2 7 1 1-4 0-5z"/></svg>
+    </a>
+
     <script>
-        // Menu Hambúrguer
         function toggleMenu() {
             document.getElementById('menu-nav').classList.toggle('mostrar-menu');
         }
 
-        // Lógica do Carrinho
         let carrinho = JSON.parse(localStorage.getItem('carrinhoMariante')) || [];
 
         function atualizarCarrinho() {
@@ -131,8 +152,8 @@
             mensagem += `\n*Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
             mensagem += `\n\nMeu CEP/Região é: `;
 
-            // ⚠️ NÚMERO DO WHATSAPP AQUI
-            const meuWhatsApp = "5551981487936"; 
+            // ⚠️ SEU NÚMERO DO WHATSAPP AQUI
+            const meuWhatsApp = "5511981487936"; 
             
             const url = `https://wa.me/${meuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
             window.open(url, '_blank');

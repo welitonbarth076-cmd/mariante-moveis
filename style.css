@@ -32,7 +32,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #FFC107; /* Linha dourada */
+    border-bottom: 2px solid #FFC107;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -74,7 +74,7 @@ nav a:hover {
 }
 
 .menu-hamburguer {
-    display: none; /* Escondido no desktop */
+    display: none;
     background: transparent;
     border: none;
     color: #FFC107;
@@ -482,13 +482,108 @@ button:disabled {
    RODAPÉ (FOOTER)
    ========================================= */
 footer {
+    background-color: #000;
+    padding: 50px 5% 20px;
+    border-top: 1px solid #FFC107;
+    text-align: left;
+}
+.footer-conteudo {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 30px;
+    max-width: 1300px;
+    margin: 0 auto 30px auto;
+}
+.footer-col {
+    flex: 1;
+    min-width: 200px;
+}
+.footer-col h4 {
+    color: #FFC107;
+    margin-bottom: 15px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+}
+.footer-col p, .footer-col a {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+    text-decoration: none;
+}
+.footer-col a:hover {
+    color: #FFC107;
+}
+.footer-copy {
+    text-align: center;
+    color: #555;
+    font-size: 12px;
+    border-top: 1px solid #222;
+    padding-top: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* =========================================
+   NOVAS MELHORIAS: HERO, SELOS E WHATSAPP
+   ========================================= */
+.hero {
     text-align: center;
     padding: 40px 20px;
-    background-color: #000;
-    color: #666;
-    margin-top: 60px;
-    border-top: 1px solid #222;
-    font-size: 14px;
+    background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid #222;
+}
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+.hero p {
+    color: #aaa;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.btn-whatsapp-flutuante {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25D366;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: transform 0.3s;
+}
+.btn-whatsapp-flutuante:hover {
+    transform: scale(1.1);
+}
+
+.selos-confianca {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+.selo {
+    background: #111;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;
+    min-width: 100px;
+    color: #ddd;
 }
 
 /* =========================================
@@ -539,6 +634,9 @@ footer {
         font-size: 26px;
         margin-top: 20px;
     }
+
+    .hero h1 { font-size: 28px; }
+    .hero p { font-size: 14px; }
 
     .aviso-entrega {
         font-size: 12px;
@@ -600,4 +698,7 @@ footer {
     .btn-finalizar {
         width: 100%;
     }
+
+    .footer-conteudo { flex-direction: column; text-align: center; }
+    .selos-confianca { flex-direction: column; }
 }
